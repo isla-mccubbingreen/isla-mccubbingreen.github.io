@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Isla McCubbin-Green — Portfolio</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Amarante&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              amarante: ['"Amarante"', 'serif'],
+              playfair: ['"Playfair Display"', 'serif'],
+            }
+          }
+        }
+      }
+    </script>
+
+    <style>
+      /* ── Gradient background ── */
+      @keyframes gradientShift {
+        0%   { background-position: 0% 50%; }
+        50%  { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+      }
+      body {
+        background: linear-gradient(135deg, #030712, #0f172a, #0c1a2e, #0369a1 120%);
+        background-size: 300% 300%;
+        animation: gradientShift 18s ease infinite;
+      }
+
+      /* ── Terminal window ── */
+      .terminal {
+        background: rgba(2,6,23,0.85);
+        border: 1px solid rgba(56,189,248,0.25);
+        border-radius: 12px;
+        backdrop-filter: blur(18px);
+        font-family: 'Courier New', monospace;
+        box-shadow: 0 0 60px rgba(14,165,233,0.12), 0 25px 50px rgba(0,0,0,0.5);
+      }
+      .terminal-bar {
+        background: rgba(15,23,42,0.9);
+        border-radius: 12px 12px 0 0;
+        padding: 10px 14px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        border-bottom: 1px solid rgba(56,189,248,0.15);
+      }
+      .dot { width: 12px; height: 12px; border-radius: 50%; }
+      .dot-red   { background: #ff5f57; }
+      .dot-yellow{ background: #ffbd2e; }
+      .dot-green { background: #28c840; }
+
+      /* Typewriter */
+      .typewriter-line { overflow: hidden; white-space: nowrap; border-right: 2px solid #38bdf8; }
+      @keyframes typing1 { from { width:0 } to { width:100% } }
+      @keyframes typing2 { from { width:0 } to { width:100% } }
+      @keyframes typing3 { from { width:0 } to { width:100% } }
+      @keyframes typing4 { from { width:0 } to { width:100% } }
+      @keyframes typing5 { from { width:0 } to { width:100% } }
+      @keyframes typing6 { from { width:0 } to { width:100% } }
+      @keyframes typing7 { from { width:0 } to { width:100% } }
+      @keyframes blink        { 0%,100%{ border-color:transparent } 50%{ border-color:#38bdf8 } }
+      @keyframes cursorBlink  { 0%,49%{ opacity:1 } 50%,100%{ opacity:0 } }
+
+      .cursor-block {
+        display: inline-block;
+        width: 9px;
+        height: 1.1em;
+        background: #38bdf8;
+        vertical-align: text-bottom;
+        animation: cursorBlink 1.06s step-end infinite;
+      }
+
+        .line1 { animation: typing1 0.9s steps(40,end) 0.4s both, blink 0.7s step-end 1.3s 2; }
+        .line2 { animation: typing2 1.1s steps(45,end) 1.4s both, blink 0.7s step-end 2.5s 2; }
+        .line3 { animation: typing3 0.8s steps(30,end) 2.6s both, blink 0.7s step-end 3.4s 2; }
+        .line4 { animation: typing4 0.9s steps(35,end) 3.5s both, blink 0.7s step-end 4.4s 2; }
+        .line5 { animation: typing5 0.9s steps(35,end) 4.5s both, blink 0.7s step-end 5.4s 2; }
+        .line6 { animation: typing6 0.9s steps(35,end) 5.5s both, blink 0.7s step-end 6.4s 2; }
+        .line7 { animation: typing7 1.0s steps(42,end) 6.5s both, blink 0.7s step-end 7.5s infinite; }
+
+      .prompt { color: #38bdf8; }
+      .cmd    { color: #e2e8f0; }
+      .out    { color: #94a3b8; }
+      .green  { color: #4ade80; }
+      .yellow { color: #facc15; }
+      .sky    { color: #38bdf8; }
+
+      /* ── Scroll-fade-in tiles ── */
+      .fade-tile {
+        opacity: 0;
+        transform: translateY(28px);
+        transition: opacity 0.55s ease, transform 0.55s ease;
+      }
+      .fade-tile.visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      /* ── Skill pills ── */
+      .pill {
+        background: rgba(71,85,105,0.4);
+        border: 1px solid rgba(56,189,248,0.12);
+        border-radius: 9999px;
+        padding: 4px 14px;
+        font-size: 0.85rem;
+        cursor: default;
+        transition: all 0.2s ease;
+        backdrop-filter: blur(6px);
+      }
+      .pill:hover {
+        background: rgba(14,165,233,0.3);
+        border-color: rgba(56,189,248,0.5);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 14px rgba(14,165,233,0.25);
+      }
+
+      /* ── Project card ── */
+      .project-card {
+        background: rgba(71,85,105,0.25);
+        border: 1px solid rgba(56,189,248,0.1);
+        border-radius: 16px;
+        backdrop-filter: blur(14px);
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+      }
+      .project-card::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(135deg, rgba(14,165,233,0.07) 0%, transparent 70%);
+        opacity: 0;
+        transition: opacity 0.3s ease;
+      }
+      .project-card:hover {
+        transform: translateY(-6px);
+        border-color: rgba(56,189,248,0.35);
+        box-shadow: 0 20px 50px rgba(14,165,233,0.15);
+      }
+      .project-card:hover::before { opacity: 1; }
+
+      .card-tag {
+        display: inline-block;
+        font-size: 0.7rem;
+        background: rgba(14,165,233,0.15);
+        border: 1px solid rgba(56,189,248,0.25);
+        border-radius: 4px;
+        padding: 2px 7px;
+        color: #7dd3fc;
+        margin-right: 4px;
+        margin-top: 4px;
+      }
+
+      /* ── Section divider ── */
+      .section-label {
+        font-size: 0.7rem;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: #38bdf8;
+        margin-bottom: 6px;
+      }
+
+      /* ── Nav ── */
+      nav a {
+        font-size: 0.875rem;
+        color: #cbd5e1;
+        letter-spacing: 0.05em;
+        transition: color 0.2s;
+        position: relative;
+      }
+      nav a::after {
+        content: '';
+        position: absolute;
+        bottom: -2px; left: 0;
+        width: 0; height: 1px;
+        background: #38bdf8;
+        transition: width 0.25s ease;
+      }
+      nav a:hover { color: #f1f5f9; }
+      nav a:hover::after { width: 100%; }
+
+      /* ── Connect links ── */
+      .connect-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: rgba(71,85,105,0.35);
+        border: 1px solid rgba(56,189,248,0.15);
+        border-radius: 9999px;
+        padding: 8px 20px;
+        font-size: 0.875rem;
+        transition: all 0.25s ease;
+        color: #e2e8f0;
+        text-decoration: none;
+      }
+      .connect-link:hover {
+        background: rgba(14,165,233,0.25);
+        border-color: rgba(56,189,248,0.5);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(14,165,233,0.2);
+      }
+
+      /* ── Ambient glow orbs ── */
+      .orb {
+        position: fixed;
+        border-radius: 50%;
+        filter: blur(100px);
+        pointer-events: none;
+        z-index: 0;
+      }
+
+      /* Reduce motion */
+      @media (prefers-reduced-motion: reduce) {
+        *, ::before, ::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+      }
+    </style>
+</head>
+
+<body class="text-gray-100 min-h-screen">
+
+  <!-- Ambient orbs -->
+  <div class="orb w-96 h-96 bg-sky-600/20 top-0 right-1/4" style="top:5%; right:20%;"></div>
+  <div class="orb w-64 h-64 bg-indigo-600/15" style="top:60%; left:5%;"></div>
+
+  <!-- ══ NAV ══════════════════════════════════════════ -->
+  <nav class="fixed top-0 left-0 right-0 z-50" style="background:rgba(3,7,18,0.6); backdrop-filter:blur(18px); border-bottom:1px solid rgba(56,189,248,0.08);">
+    <div class="flex items-center justify-between px-8 h-16 max-w-7xl mx-auto">
+      <div class="font-amarante text-lg tracking-wide">IMG</div>
+      <div class="flex gap-8">
+        <a href="#home"           onclick="smoothScroll(event,'home')">Home</a>
+        <a href="#experience"     onclick="smoothScroll(event,'experience')">Experience</a>
+        <a href="#projects"       onclick="smoothScroll(event,'projects')">Projects</a>
+        <a href="#course_projects" onclick="smoothScroll(event,'course_projects')">Coursework</a>
+        <a href="#contacts"       onclick="smoothScroll(event,'contacts')">Connect</a>
+      </div>
+    </div>
+  </nav>
+
+
+  <!-- ══ HERO ═════════════════════════════════════════ -->
+  <section id="home" class="relative min-h-screen flex items-center" style="z-index:1;">
+    <div class="max-w-7xl mx-auto px-8 w-full pt-20">
+      <div class="grid grid-cols-2 gap-6 items-center min-h-[85vh]">
+
+        <!-- Left: Name + role + skills -->
+        <div>
+         <!-- <p class="section-label mb-3">Portfolio — 2026</p> -->
+          <h1 class="font-amarante text-[4.2rem] leading-tight tracking-tight mb-4 whitespace-nowrap">
+            Isla McCubbin-Green
+          </h1>
+          <h2 class="text-3xl text-slate-100 mb-2">
+            <span class="text-sky-400">Software</span> Engineer
+            &amp; <span class="text-sky-400">Cyber Security</span> Analyst
+          </h2>
+           <p class="text-slate-300 text-[0.99rem] mb-8 leading-relaxed">
+            University of Michigan · Computer Science BS &amp; Business Administration BBA · 2028<br>
+            Passionate about building and defending digital systems.
+          </p>
+
+          <!-- Skills -->
+          <div class="flex flex-wrap gap-2 mb-10">
+            <span class="pill">C++</span>
+            <span class="pill">C</span>
+            <span class="pill">Java</span>
+            <span class="pill">HTML / CSS</span>
+            <span class="pill">Python</span>
+            <span class="pill">Linux / WSL</span>
+            <span class="pill">AI</span>
+          </div>
+
+          <!-- CTAs -->
+          <div class="flex gap-4">
+            <a href="https://github.com/YOUR-USERNAME" target="_blank" class="connect-link">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+              GitHub
+            </a>
+            <a href="https://www.linkedin.com/in/isla-mccubbingreen/" target="_blank" class="connect-link">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+              LinkedIn
+            </a>
+            <a href="mailto:islamccubbingreen@gmail.com" class="connect-link">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+              Email
+            </a>
+          </div>
+        </div>
+
+        <!-- Right: Terminal -->
+        <div class="terminal text-sm leading-7 select-none">
+          <div class="terminal-bar">
+            <div class="dot dot-red"></div>
+            <div class="dot dot-yellow"></div>
+            <div class="dot dot-green"></div>
+            <span class="text-xs text-slate-500 ml-2 font-mono">isla@umich ~ bash</span>
+          </div>
+          <div class="p-6 space-y-1" style="min-height:300px;">
+            <div class="typewriter-line line1">
+              <span class="prompt">isla@umich</span>
+              <span class="out">:</span>
+              <span class="sky">~</span>
+              <span class="out">$</span>
+              <span class="cmd"> whoami</span>
+            </div>
+            <div class="typewriter-line line2">
+              <span class="green">→ Isla McCubbin-Green</span>
+            </div>
+            <div class="typewriter-line line3">
+              <span class="prompt">isla@umich</span>
+              <span class="out">:</span>
+              <span class="sky">~</span>
+              <span class="out">$</span>
+              <span class="cmd"> Computer Science and Business Administration  </span>
+            </div>
+            <div class="typewriter-line line4">
+              <span class="prompt">isla@umich</span>
+              <span class="out">:</span>
+              <span class="sky">~</span>
+              <span class="out">$</span>
+              <span class="cmd"> Dual Bachelors' at the University of Michigan</span>
+            </div> 
+            <div class="typewriter-line line5">
+              <span class="prompt">isla@umich</span>
+              <span class="out">:</span>
+              <span class="sky">~</span>
+              <span class="out">$</span>
+              <span class="cmd"> I build things at the intersection of</span>
+            </div>
+            <div class="typewriter-line line6">
+              <span class="prompt">isla@umich</span>
+              <span class="out">:</span>
+              <span class="sky">~</span>
+              <span class="out">$</span>
+              <span class="cmd"> tech and impact!</span>
+            </div>
+            <div class="typewriter-line line7">
+           <!-- <span class="yellow">[ MBC Finalist · NCUR Presenter · Teaching 500+ students ]</span> -->
+            </div>
+            <div class="typewriter-line line8">
+            <span class="out"></span>
+            </div>
+
+<div class="typewriter-line line9" style="visibility:hidden;">
+  &nbsp;
+</div>
+            <div style="opacity:0; animation: fadeIn 0.4s 7s forwards;">
+              <span class="prompt">isla@umich</span>
+              <span class="out">:</span>
+              <span class="sky">~</span>
+              <span class="out">$</span>
+              <span class="cmd"> </span><span class="cursor-block"></span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Scroll indicator -->
+    <div class="absolute bottom-1 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 opacity-40">
+      <span class="text-xs tracking-widest uppercase">Scroll</span>
+      <div style="width:1px; height:40px; background:linear-gradient(to bottom, #38bdf8, transparent);"></div>
+    </div>
+  </section>
+
+    <!-- ══ EXPERIENCE ═══════════════════════════════════ -->
+  <section id="experience" class="relative py-12" style="z-index:1;">
+    <div class="max-w-7xl mx-auto px-8">
+      <p class="section-label">Where I've worked</p>
+      <h2 class="text-4xl font-bold font-playfair mb-8">Experience</h2>
+      <div class="flex flex-col gap-4">
+ 
+        <!-- Eaton -->
+        <div class="project-card fade-tile px-8 py-6">
+          <div class="flex items-start justify-between mb-4">
+            <div>
+              <p class="text-xs text-sky-400 uppercase tracking-widest mb-1">Cyber Security</p>
+              <h3 class="text-xl font-bold">Cyber Security Analyst</h3>
+              <p class="text-slate-300 text-sm mt-1">Eaton · Incident Response</p>
+            </div>
+            <span class="card-tag shrink-0 ml-8">May 2026 – Aug 2026</span>
+          </div>
+          <p class="text-slate-400 text-sm leading-relaxed mb-4">
+            <!-- Add your description here -->
+          </p>
+          <div>
+            <span class="card-tag">Incident Response</span>
+            <span class="card-tag">CrowdStrike</span>
+            <span class="card-tag">ThreatConnect</span>
+            <span class="card-tag">Checkpoint Harmony</span>
+          </div>
+        </div>
+ 
+        <!-- UofM IA -->
+        <div class="project-card fade-tile px-8 py-6" style="transition-delay:0.1s;">
+          <div class="flex items-start justify-between mb-4">
+            <div>
+              <p class="text-xs text-sky-400 uppercase tracking-widest mb-1">Teaching</p>
+              <h3 class="text-xl font-bold">Instructional Assistant</h3>
+              <p class="text-slate-300 text-sm mt-1">University of Michigan · EECS 281: Data Structures & Algorithms</p>
+            </div>
+            <span class="card-tag shrink-0 ml-8">Jan 2026 – Present</span>
+          </div>
+          <p class="text-slate-400 text-sm leading-relaxed mb-4">
+            <!-- Add your description here -->
+          </p>
+          <div>
+            <span class="card-tag">C++</span>
+            <span class="card-tag">Algorithms</span>
+            <span class="card-tag">Data Structures</span>
+            <span class="card-tag">Teaching</span>
+          </div>
+        </div>
+ 
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ PROJECTS ════════════════════════════════════ -->
+  <section id="projects" class="relative py-16" style="z-index:1;">
+    <div class="max-w-7xl mx-auto px-8">
+      <p class="section-label">Selected work</p>
+      <h2 class="text-4xl font-bold font-playfair mb-10">Projects</h2>
+      <div class="grid grid-cols-3 gap-6">
+
+        <a href="#projects/project.html" class="project-card p-6 aspect-square flex flex-col fade-tile">
+          <div class="flex-1">
+            <p class="text-xs text-sky-400 uppercase tracking-widest mb-2">AR / VR</p>
+            <h3 class="text-xl font-bold mb-3">ChemCreator VR</h3>
+            <p class="text-slate-400 text-sm leading-relaxed">Immersive chemistry lab built in Unity, letting students visualize molecular reactions in virtual reality. <br><br>
+                Led the team to 1st place in the +Tech Innovation Jam EdTech track, and
+                advanced as 1 of 12 finalists out of 80+ teams in the Michigan Business Challenge. <br><br>
+                Secured Institutional Review Board approval to test the application with 100+ high school students.
+            </p>
+          </div>
+          <div class="mt-4">
+            <span class="card-tag">Unity</span>
+            <span class="card-tag">Entrepreneurship</span>
+            <span class="card-tag">Research</span>
+            <span class="card-tag">Virtual Reality</span>
+          </div>
+        </a>
+
+        <a href="#projects" class="project-card p-6 aspect-square flex flex-col fade-tile" style="transition-delay:0.1s;">
+          <div class="flex-1">
+            <p class="text-xs text-sky-400 uppercase tracking-widest mb-2">Full Stack AR</p>
+            <h3 class="text-xl font-bold mb-3">Kelsey Cohort</h3>
+            <p class="text-slate-400 text-sm leading-relaxed"> Built a WebAR application for the Kelsey Archaeological Museum to showcase artifacts that couldn't be put on display, increasing visitor engagement. Researched and evaluated AR tools before selecting 8th Wall for its WebAR capabilities. <br><br> Developed UI design, object tracking, and cleaning and importing 3D models.</p>
+          </div>
+          <div class="mt-4">
+            <span class="card-tag">Niantic 8th Wall</span>
+            <span class="card-tag">WebAR</span>
+          </div>
+        </a>
+
+        <a href="#projects" class="project-card p-6 aspect-square flex flex-col fade-tile" style="transition-delay:0.2s;">
+          <div class="flex-1">
+            <p class="text-xs text-sky-400 uppercase tracking-widest mb-2">Security</p>
+            <h3 class="text-xl font-bold mb-3">CallGuard</h3>
+            <p class="text-slate-400 text-sm leading-relaxed">Led an interdisciplinary team through a seven month STEM and business competition, developing a prototype app capable of detecting scam calls in real-time during a live call using python and artificial intelligence. Authored a 30-page business plan covering competitor analysis, SWOT analysis, financial funding strategy, and a roadmap from prototype to full product. Presented to a panel of judges alongside 20 competing teams, earning 2nd place.</p>
+          </div>
+          <div class="mt-4">
+            <span class="card-tag">Python</span>
+            <span class="card-tag">Artificial Intelligence</span>
+            <span class="card-tag">Entrepreneurship</span>
+          </div>
+        </a>
+
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ══ COURSE PROJECTS ═══════════════════════════ -->
+  <section id="course_projects" class="relative py-8 pb-24" style="z-index:1;">
+    <div class="max-w-7xl mx-auto px-8">
+      <p class="section-label">Academic work</p>
+      <h2 class="text-4xl font-bold font-playfair mb-10">Coursework</h2>
+      <div class="grid grid-cols-3 gap-6">
+
+        <a href="#course_projects/project.html" class="project-card p-6 aspect-square flex flex-col fade-tile">
+          <div class="flex-1">
+            <p class="text-xs text-sky-400 uppercase tracking-widest mb-2">Data Structures</p>
+            <h3 class="text-xl font-bold mb-3">Stocks</h3>
+            <p class="text-slate-400 text-sm leading-relaxed">Simulated an electronic stock exchange in C++ that processes buy and sell orders in real time, matching trades using priority queues to always pair the lowest-price seller with the highest-price buyer. Supported verbose trade logging, running median match prices, per-trader profit summaries, and a time-traveler mode that finds the hypothetical buy/sell pair maximizing profit across all orders for each stock.</p>
+          </div>
+          <div class="mt-4">
+            <span class="card-tag">C++</span>
+            <span class="card-tag">Priority Queues</span>
+          </div>
+        </a>
+
+        <a href="#course_projects/project.html" class="project-card p-6 aspect-square flex flex-col fade-tile" style="transition-delay:0.1s;">
+          <div class="flex-1">
+            <p class="text-xs text-sky-400 uppercase tracking-widest mb-2">Algorithms</p>
+            <h3 class="text-xl font-bold mb-3">Letterman</h3>
+            <p class="text-slate-400 text-sm leading-relaxed">Implemented a word-morphing pathfinder in C++ that transforms a beginning word into an ending word one modification at a time, supporting letter changes, insertions, deletions, and swaps. Built both BFS and DFS routing schemes using a deque-based search container, with a custom dictionary parser handling simple and complex word-generation formats.</p>
+          </div>
+          <div class="mt-4">
+            <span class="card-tag">C++</span>
+            <span class="card-tag">BFS</span>
+            <span class="card-tag">DFS</span>
+          </div>
+        </a>
+
+        <a href="#course_projects/project.html" class="project-card p-6 aspect-square flex flex-col fade-tile" style="transition-delay:0.2s;">
+          <div class="flex-1">
+            <p class="text-xs text-sky-400 uppercase tracking-widest mb-2">Data Structures</p>
+            <h3 class="text-xl font-bold mb-3">Logman</h3>
+            <p class="text-slate-400 text-sm leading-relaxed">Built a C++ log management system for EECS 281 that reads large log files and enters an interactive query mode. Implemented timestamp range searches, category lookups, and multi-keyword searches using hash tables and optimized data structures. Supported an editable "excerpt list" with sort, move, and delete operations, with a focus on meeting strict time complexity requirements across all commands.</p>
+          </div>
+          <div class="mt-4">
+            <span class="card-tag">C++</span>
+            <span class="card-tag">Hash Tables</span>
+            <span class="card-tag">Performance</span>
+          </div>
+        </a>
+
+        <a href="#course_projects/project.html" class="project-card p-6 aspect-square flex flex-col fade-tile" style="transition-delay:0.1s;">
+          <div class="flex-1">
+            <p class="text-xs text-sky-400 uppercase tracking-widest mb-2">Algorithms</p>
+            <h3 class="text-xl font-bold mb-3">Traveling Salesman</h3>
+            <p class="text-slate-400 text-sm leading-relaxed">Solved the Travelling Salesperson Problem in C++ across three modes: computed a Minimum Spanning Tree using Prim's algorithm with campus-area edge constraints, implemented a fast heuristic approximation to generate near-optimal drone delivery routes across tens of thousands of locations, and found provably optimal tours using a branch-and-bound algorithm with aggressive pruning to stay within a 35-second time limit.</p>
+          </div>
+          <div class="mt-4">
+            <span class="card-tag">C++</span>
+            <span class="card-tag">Graph Theory</span>
+            <span class="card-tag">MST</span>
+            <span class="card-tag">Optimization</span>
+          </div>
+        </a>
+
+        <a href="#course_projects/project.html" class="project-card p-6 aspect-square flex flex-col fade-tile" style="transition-delay:0.2s;">
+          <div class="flex-1">
+            <p class="text-xs text-sky-400 uppercase tracking-widest mb-2">Systems</p>
+            <h3 class="text-xl font-bold mb-3">Assembly Pipeliner</h3>
+            <p class="text-slate-400 text-sm leading-relaxed">Built a 5-stage pipelined LC2K processor simulator in C with cycle-accurate pipeline register modeling. Implemented data forwarding, load-use hazard stalling, and branch misprediction flushing using predict-not-taken speculation. Simulated instruction/data memory behavior and tracked processor state across execution cycles. </p>
+          </div>
+            <div class="mt-4">
+            <span class="card-tag">C</span>
+            <span class="card-tag">Systems Programming</span>
+            <span class="card-tag">Hazard Detection</span>
+          </div>
+        </a>
+
+        <a href="#course_projects/project.html" class="project-card p-6 aspect-square flex flex-col fade-tile" style="transition-delay:0.3s;">
+          <div class="flex-1">
+            <p class="text-xs text-sky-400 uppercase tracking-widest mb-2">Architecture</p>
+            <h3 class="text-xl font-bold mb-3">Cache Simulator</h3>
+            <p class="text-slate-400 text-sm leading-relaxed">Built a flexible CPU cache simulator in C, integrated into an LC2K processor simulator. Implemented a write-back, allocate-on-write cache supporting configurable block sizes, set counts, and associativity levels. Handled LRU replacement, dirty block writebacks, and cache misses across instruction fetches, loads, and stores. Tracking hits, misses, and memory transfers throughout program execution.</p>
+          </div>
+          <div class="mt-4">
+            <span class="card-tag">C</span>
+            <span class="card-tag">Architecture</span>
+            <span class="card-tag">Cache Design</span>
+          </div>
+        </a>
+
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ══ CONNECT ════════════════════════════════════ -->
+  <section id="contacts" class="relative py-2 pb-32" style="z-index:1;">
+    <div class="max-w-7xl mx-auto px-8">
+      <div style="border-top:1px solid rgba(56,189,248,0.15);" class="pt-16">
+        <p class="section-label">Get in touch</p>
+        <h2 class="text-4xl font-bold font-playfair mb-4">Let's Connect</h2>
+        <p class="text-slate-400 text-sm mb-8 max-w-sm">Whether it's an internship, research collaboration, or just a chat about security and systems — my inbox is open.</p>
+        <div class="flex gap-4">
+          <a href="https://github.com/YOUR-USERNAME" target="_blank" class="connect-link">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+            GitHub
+          </a>
+            <a href="https://www.linkedin.com/in/isla-mccubbingreen/" target="_blank" class="connect-link">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+            LinkedIn
+          </a>
+          <a href="mailto:islamccubbingreen@gmail.com" class="connect-link">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+            islamccubbingreen@gmail.com
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ══ SCRIPTS ════════════════════════════════════ -->
+  <script>
+    /* Smooth scroll */
+    function smoothScroll(event, targetId) {
+      event.preventDefault();
+      const el = document.getElementById(targetId);
+      if (el) {
+        window.scrollTo({ top: el.getBoundingClientRect().top + window.pageYOffset - 72, behavior: 'smooth' });
+      }
+    }
+
+    /* Intersection observer for fade-in tiles */
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12 });
+
+    document.querySelectorAll('.fade-tile').forEach(el => observer.observe(el));
+
+    /* Fade-in for terminal last line */
+    const style = document.createElement('style');
+    style.textContent = '@keyframes fadeIn { from { opacity:0 } to { opacity:1 } }';
+    document.head.appendChild(style);
+  </script>
+
+</body>
+</html>
